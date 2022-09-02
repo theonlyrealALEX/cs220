@@ -3,9 +3,9 @@ mod test {
     use super::super::assignment02::*;
 
     #[test]
-    fn test_farenheit() {
-        assert_eq!(farhenheit_to_celcius(32.0), 0.0);
-        assert_eq!(farhenheit_to_celcius(212.0), 100.0);
+    fn test_fahrenheit() {
+        assert_eq!(fahrenheit_to_celsius(32.0), 0.0);
+        assert_eq!(fahrenheit_to_celsius(212.0), 100.0);
     }
 
     #[test]
@@ -18,6 +18,7 @@ mod test {
 
     #[test]
     fn test_up3() {
+        assert_eq!(up3(1), 1);
         assert_eq!(up3(6), 9);
         assert_eq!(up3(9), 9);
         assert_eq!(up3(10), 27);
@@ -25,12 +26,26 @@ mod test {
     }
 
     #[test]
+    fn test_gcd() {
+        assert_eq!(gcd(5, 1), 1);
+        assert_eq!(gcd(3, 3), 3);
+        assert_eq!(gcd(2, 6), 2);
+        assert_eq!(gcd(24, 18), 6);
+        assert_eq!(gcd(20, 63), 1);
+        assert_eq!(gcd(0, 33), 33);
+    }
+
+    #[test]
     fn test_sum_array() {
+        assert_eq!(sum_array(&[]), 0);
+        assert_eq!(sum_array(&[1]), 1);
         assert_eq!(sum_array(&[1, 2, 3, 4, 5, 100]), 115);
     }
 
     #[test]
     fn test_chooses() {
+        assert_eq!(chooses(0), vec![1]);
+        assert_eq!(chooses(1), vec![1, 1]);
         assert_eq!(chooses(5), vec![1, 5, 10, 10, 5, 1]);
         assert_eq!(chooses(6), vec![1, 6, 15, 20, 15, 6, 1]);
     }

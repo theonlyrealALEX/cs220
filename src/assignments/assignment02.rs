@@ -9,8 +9,8 @@
 use std::cmp;
 use std::ops::{Mul, Sub}; //"Add" was deleted because "Unused Import" Error came up
 
-const FARHENHEIT_OFFSET: f64 = 32.0;
-const FARHENHEIT_SCALE: f64 = 5.0 / 9.0;
+const FAHRENHEIT_OFFSET: f64 = 32.0;
+const FAHRENHEIT_SCALE: f64 = 5.0 / 9.0;
 
 /// Converts Farenheit to Celcius temperature degree.
 pub(crate) fn farhenheit_to_celcius(degree: f64) -> f64 {
@@ -24,7 +24,7 @@ pub(crate) fn capitalize(input: String) -> String {
     //todo!()
 }
 
-/// Returns the sume of the given array. (We assume the absence of integer overflow.)
+/// Returns the sum of the given array. (We assume the absence of integer overflow.)
 pub(crate) fn sum_array(input: &[u64]) -> u64 {
     input.iter().sum()
     //todo!()
@@ -56,6 +56,14 @@ pub(crate) fn gcd(lhs: u64, rhs: u64) -> u64 {
 
 /// Returns the array of nC0, nC1, nC2, ..., nCn, where nCk = n! / (k! * (n-k)!).
 pub(crate) fn chooses(n: u64) -> Vec<u64> {
+    let mut v = vec![1];
+    let mut k = 1;
+    println!("{}", v[1]);
+    while k <= n {
+        v.push(k); //todo: insert formula for calculating
+        k = k+1;
+    }
+    
     todo!()
 }
 
