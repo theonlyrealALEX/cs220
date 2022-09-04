@@ -54,7 +54,7 @@ pub(crate) fn gcd(lhs: u64, rhs: u64) -> u64 {
     1
 }
 
-/// Returns the array of nC0, nC1, nC2, ..., nCn, where nCk = n! / (k! * (n-k)!).
+/// Returns the array of nC0, nC1, nC2, ..., nCn, where nCk = n! / (k! * (n-k)!). (We assume the absence of integer overflow.)
 pub(crate) fn chooses(n: u64) -> Vec<u64> {
     let mut v = vec![1];
     let mut k = 1;
@@ -150,7 +150,7 @@ const FIBONACCI_MAT: Mat2 = Mat2 {
 /// The vector used for calculating Fibonacci numbers.
 const FIBONACCI_VEC: Vec2 = Vec2 { a: 1, b: 0 };
 
-/// Calculates the Fibonacci number.
+/// Calculates the Fibonacci number. (We assume the absence of integer overflow.)
 ///
 /// Consult <https://web.media.mit.edu/~holbrow/post/calculating-fibonacci-numbers-with-matrices-and-linear-algebra/> for matrix computation of Fibonacci numbers.
 pub(crate) fn fibonacci(n: u64) -> u64 {
