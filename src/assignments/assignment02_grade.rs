@@ -15,15 +15,12 @@ mod test {
             String::from("AABBBCCCCDDDDD❤한글과✓"),
         );
         //User submitted Test only produces Error even with correct code
-        //assert_eq!(capitalize(String::from("Tschüß")), String::from("TSCHÜß"));
-    
+        assert_eq!(capitalize(String::from("Tschüß")), String::from("TSCHÜSS"));
     }
 
     #[test]
     fn test_up3() {
-        println!("Running Test");
         assert_eq!(up3(0), 1);
-        println!("Tested up3(0),1");
         assert_eq!(up3(1), 1);
         assert_eq!(up3(6), 9);
         assert_eq!(up3(9), 9);
@@ -56,6 +53,11 @@ mod test {
         assert_eq!(chooses(1), vec![1, 1]);
         assert_eq!(chooses(5), vec![1, 5, 10, 10, 5, 1]);
         assert_eq!(chooses(6), vec![1, 6, 15, 20, 15, 6, 1]);
+        println!("Run Test 5");
+        //println!(
+        //    "chooses_calculation {}",
+        //    chooses_calculation(66669223372036854775808, 1)
+        //);
         assert_eq!(
             chooses(67),
             vec![

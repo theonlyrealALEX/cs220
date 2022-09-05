@@ -28,6 +28,5 @@
 #![deny(unreachable_pub)]
 #![deny(single_use_lifetimes)]
 #![deny(unused_lifetimes)]
-#![deny(unstable_features)]
-
+//#![deny(unused_imports)]
 mod assignments;
