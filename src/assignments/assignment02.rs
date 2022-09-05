@@ -13,8 +13,8 @@ const FAHRENHEIT_OFFSET: f64 = 32.0;
 const FAHRENHEIT_SCALE: f64 = 5.0 / 9.0;
 
 /// Converts Farenheit to Celcius temperature degree.
-pub(crate) fn farhenheit_to_celcius(degree: f64) -> f64 {
-    degree.sub(FARHENHEIT_OFFSET).mul(FARHENHEIT_SCALE)
+pub(crate) fn fahrenheit_to_celsius(degree: f64) -> f64 {
+    degree.sub(FAHRENHEIT_OFFSET).mul(FAHRENHEIT_SCALE)
     //todo
 }
 
@@ -34,7 +34,8 @@ pub(crate) fn sum_array(input: &[u64]) -> u64 {
 ///
 /// For instance, up3(6) = 9, up3(9) = 9, up3(10) = 27. (We assume the absence of integer overflow.)
 pub(crate) fn up3(n: u64) -> u64 {
-    let mut i = 1;
+    let mut i = 0;
+    print!("{}", n);
     while 3_u64.wrapping_pow(i) < n {
         i = i + 1;
     }
@@ -47,7 +48,7 @@ pub(crate) fn gcd(lhs: u64, rhs: u64) -> u64 {
     let mut i = cmp::min(lhs, rhs);
     while i < cmp::min(lhs, rhs) {
         if cmp::min(lhs, rhs) % i == 0 && cmp::max(lhs, rhs) % i == 0 {
-            i
+            return i;
         }
         i = i - 1;
     }
@@ -61,9 +62,9 @@ pub(crate) fn chooses(n: u64) -> Vec<u64> {
     println!("{}", v[1]);
     while k <= n {
         v.push(k); //todo: insert formula for calculating
-        k = k+1;
+        k = k + 1;
     }
-    
+
     todo!()
 }
 
