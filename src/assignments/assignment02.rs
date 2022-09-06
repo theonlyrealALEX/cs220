@@ -7,7 +7,8 @@
 //! See `assignment02_grade.rs` and `/scripts/grade-02.sh` for the test script.
 
 use std::cmp;
-use std::ops::{Mul, Sub}; //"Add" & Div  was deleted because "Unused Import" Error came up //same as above , result
+use std::ops::{Add, Mul, Sub}; //"Add" Add& Div  Div,, Add  was deleted because "Unused Import" Error came up //same as above , result
+
 const FAHRENHEIT_OFFSET: f64 = 32.0;
 const FAHRENHEIT_SCALE: f64 = 5.0 / 9.0;
 
@@ -66,22 +67,111 @@ pub(crate) fn chooses(n: u64) -> Vec<u64> {
     v.push(1);
     if n == 0 {
         return v;
+    } else if n == 1 {
+        v.push(1);
+        return v;
     }
-    let mut k = 1;
+    let mut v_n_0;
+    let mut v_n_1 = vec![1, 1];
+    let mut k: usize = 1;
+    let mut i: usize;
+    let n: usize = n.try_into().unwrap();
     while k <= n {
-        v.push(chooses_calculation(n, k)); //todo: insert formula for calculating
-        println!("v.push:{}", chooses_calculation(n, k));
+        v_n_0 = v_n_1;
+        v_n_1 = vec![1];
+        i = 1;
+        while i < k {
+            v_n_1.push(&v_n_0[i - 1] + &v_n_0[i]);
+            println!("v_n_1 push: {}", &v_n_0[i - 1] + &v_n_0[i]);
+            i = i + 1;
+            println!(":i {}", i)
+        }
+        v_n_1.push(1);
         k = k + 1;
         println!("k: {}", k);
+        println!("n: {}", n);
     }
-    v
+    v_n_1
+
+    //    while k <= n {
+    //        v.push(chooses_calculation_recursive(n, k)); //todo: insert formula for calculating
+    //println!("v.push:{}", chooses_calculation(n, k));
+    //        k = k + 1;
+    //println!("k: {}", k);
+    //    }
+
     //todo!()
 }
 
-pub(crate) fn chooses_calculation(n: u64, k: u64) -> u64 {
-    println!("chooses_calculation: n: {}, k: {}", n, k);
-    println!("division: {}", faculty(k).mul(faculty(n.sub(k))));
-    faculty(n).wrapping_div(faculty(k).wrapping_mul(faculty(n.wrapping_sub(k))))
+pub(crate) fn chooses_calculation_multiplicative(n: u64, k: u64) -> u64 {
+    let mut res = 1;
+    for i in 1..=k + 1 {
+        res = res * (n - (k - i)) / i;
+    }
+    res
+}
+
+pub(crate) fn chooses_calculation_recursive(n: u64, k: u64) -> u64 {
+    //println!("chooses_calculation: n: {}, k: {}", n, k);
+    //println!("division: {}", faculty(k).mul(faculty(n.sub(k))));
+    //faculty(n).wrapping_div(faculty(k).wrapping_mul(faculty(n.wrapping_sub(k))))
+    //    if k == 0 {
+    //       return 1;
+    //    } else if k == n {
+    //        return 1;
+    //    }
+    //    return chooses_calculation(n - 1, k) + chooses_calculation(n - 1, k - 1);
+    //let mut i = 1;
+    //let mut result_chooses_calculation = 1;
+    //let mut multiplicator_chooses;
+    //while i <= k {
+    //  multiplicator_chooses = n.sub(k.sub(i));
+    //result_chooses_calculation = result_chooses_calculation.mul(multiplicator_chooses);
+    //result_chooses_calculation = result_chooses_calculation.div(i);
+    //   i = i + 1;
+    // }
+    //result_chooses_calculation
+    //let mut k_choose = k;
+    //  if k > n.sub(k) {
+    //      k_choose = n.sub(k);
+    //  }
+    //  let mut result_n_chooses_k: u64 = 1;
+    // let mut i = 0;
+    //// while i < k_choose {
+    //     result_n_chooses_k = result_n_chooses_k.mul(n.sub(i));
+    //    result_n_chooses_k = result_n_chooses_k.div(i + 1);
+    //    i = i + 1;
+    // }
+    // result_n_chooses_k
+
+    //I know this is copied but i can't solve it otherwise
+    //
+    // if k == 0 {
+    //     return 1;
+    // } else if k == n {
+    //      return 1;
+    //  }
+
+    //  let mut res = 1;
+    // println!("k: {k}");
+    // println!("n-k: {}", n.sub(k));
+    // let k = cmp::min(k, n.sub(k));
+    // println!("k': {k}");
+    // println!("n:{n}");
+    // let mut i = k;
+    //
+    // while i >= 1 {
+    //     res = (res * (n - i)) / (i + 1);
+    //      i = i-1;
+    //  }
+    //  res
+
+    //Recursive approach:
+    if k == 0 || n == k {
+        return 1;
+    }
+    return chooses_calculation_recursive(n.sub(1), k)
+        .add(chooses_calculation_recursive(n.sub(1), k.sub(1)));
 }
 
 pub(crate) fn faculty(n: u64) -> u64 {

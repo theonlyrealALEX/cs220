@@ -55,7 +55,7 @@ mod test {
         assert_eq!(chooses(6), vec![1, 6, 15, 20, 15, 6, 1]);
         println!("Run Test 5");
         //println!(
-        //    "chooses_calculation {}",
+        //    "chooses_callculation {}",
         //    chooses_calculation(66669223372036854775808, 1)
         //);
         assert_eq!(
