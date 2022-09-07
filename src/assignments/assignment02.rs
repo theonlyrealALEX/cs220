@@ -82,14 +82,14 @@ pub(crate) fn chooses(n: u64) -> Vec<u64> {
         i = 1;
         while i < k {
             v_n_1.push(&v_n_0[i - 1] + &v_n_0[i]);
-            println!("v_n_1 push: {}", &v_n_0[i - 1] + &v_n_0[i]);
+            //println!("v_n_1 push: {}", &v_n_0[i - 1] + &v_n_0[i]);
             i = i + 1;
-            println!(":i {}", i)
+            //println!(":i {}", i)
         }
         v_n_1.push(1);
         k = k + 1;
-        println!("k: {}", k);
-        println!("n: {}", n);
+        //println!("k: {}", k);
+        //println!("n: {}", n);
     }
     v_n_1
 
