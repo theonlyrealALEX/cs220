@@ -242,32 +242,118 @@ impl Mat2 {
 
 impl Mul<Mat2> for Mat2 {
     type Output = Mat2;
-
+    //Tested and verified that it works
     fn mul(self, rhs: Mat2) -> Self::Output {
-        //self.mul(rhs)
-        todo!()
+        let mut res = Mat2::new();
+        res.a = self.a * rhs.a + self.c * rhs.b;
+        res.b = self.b * rhs.a + self.d * rhs.b;
+        res.c = self.a * rhs.c + self.c * rhs.d;
+        res.d = self.b * rhs.c + self.d * rhs.d;
+        return res;
+        //todo!()
     }
+}
+#[test]
+fn test_mul_mat2_x_mat2() {
+    let mut lhs: Mat2 = Mat2::new();
+    lhs.a = 199;
+    lhs.b = 290;
+    lhs.c = 435;
+    lhs.d = 634;
+    let mut rhs: Mat2 = Mat2::new();
+    rhs.a = 1;
+    rhs.b = 2;
+    rhs.c = 3;
+    rhs.d = 4;
+
+    println!("a:{}", lhs.mul(rhs).a);
+    println!("b:{}", lhs.mul(rhs).b);
+    println!("c:{}", lhs.mul(rhs).c);
+    println!("d:{}", lhs.mul(rhs).d);
+
+    println!("{}", lhs.a,);
 }
 
 impl Mul<Vec2> for Mat2 {
     type Output = Vec2;
     fn mul(self, rhs: Vec2) -> Self::Output {
-        todo!()
+        let mut res = rhs;
+        res.a = 0;
+        res.b = 0;
+        res.a = self.a * rhs.a + self.c * rhs.b;
+        res.b = self.b * rhs.a + self.d * rhs.b;
+        return res;
+        //todo!()
     }
+}
+
+#[test]
+fn test_mul_mat2_x_vec2() {
+    let mut lhs: Mat2 = Mat2::new();
+    lhs.a = 2;
+    lhs.b = 3;
+    lhs.c = 1;
+    lhs.d = 2;
+
+    let rhs: Vec2 = Vec2 { a: (0), b: (0) };
+
+    println!("{}", lhs.mul(rhs).a);
+    println!("{}", lhs.mul(rhs).b);
 }
 
 impl Mat2 {
     /// Calculates the power of matrix.
     fn power(self, power: u64) -> Mat2 {
-        todo!()
+        let mut res = Mat2::new();
+        if power == 0 {
+            return res;
+        }
+        if power == 1 {
+            return self;
+        }
+
+        let mut i = 1;
+        res = self;
+        while i < power {
+            res = res.mul(self);
+            i = i + 1;
+        }
+        res
+
+        // res = self;
+        // while i <= power {
+        //    res = res.mul(res);
+        //
+        //    println!("________________");
+        //    println!("{}  {}", res.a, res.c);
+        //    println!("{}  {}", res.b, res.d);
+        //     println!("i: {}", i);
+        //     println!("________________");
+        //     i = i + 1;
+        // }
+        //res
+        //todo!()
     }
 }
-
+#[test]
+fn test_power() {
+    let mut lhs: Mat2 = Mat2::new();
+    lhs.a = 1;
+    lhs.b = 2;
+    lhs.c = 4;
+    lhs.d = 4;
+    let n = 4;
+    let res = lhs.power(n);
+    println!("_RESULT_n:{}______________", n);
+    println!("{}  {}", res.a, res.c);
+    println!("{}  {}", res.b, res.d);
+    println!("________________");
+}
 impl Vec2 {
     /// Gets the upper value of vector.
     fn get_upper(self) -> u64 {
-        //self[self.len()]
-        todo!()
+        return self.a;
+        //todo!()
     }
 }
 
