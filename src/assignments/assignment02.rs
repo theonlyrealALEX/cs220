@@ -12,6 +12,7 @@ use std::ops::{Add, Mul, Sub}; //"Add" Add& Div  Div,, Add  was deleted because 
 const FAHRENHEIT_OFFSET: f64 = 32.0;
 const FAHRENHEIT_SCALE: f64 = 5.0 / 9.0;
 
+<<<<<<< HEAD
 /// Converts Farenheit to Celcius temperature degree.
 pub(crate) fn fahrenheit_to_celsius(degree: f64) -> f64 {
     degree.sub(FAHRENHEIT_OFFSET).mul(FAHRENHEIT_SCALE)
@@ -28,11 +29,27 @@ pub(crate) fn capitalize(input: String) -> String {
 pub(crate) fn sum_array(input: &[u64]) -> u64 {
     input.iter().sum()
     //todo!()
+=======
+/// Converts Fahrenheit to Celsius temperature degree.
+pub fn fahrenheit_to_celsius(degree: f64) -> f64 {
+    todo!()
+}
+
+/// Capitalizes English alphabets (leaving the other characters intact).
+pub fn capitalize(input: String) -> String {
+    todo!()
+}
+
+/// Returns the sum of the given array. (We assume the absence of integer overflow.)
+pub fn sum_array(input: &[u64]) -> u64 {
+    todo!()
+>>>>>>> upstream/main
 }
 
 /// Given a non-negative integer, say `n`, return the smallest integer of the form `3^m` that's greater than or equal to `n`.
 ///
 /// For instance, up3(6) = 9, up3(9) = 9, up3(10) = 27. (We assume the absence of integer overflow.)
+<<<<<<< HEAD
 pub(crate) fn up3(n: u64) -> u64 {
     let mut i = 0;
     while 3_u64.wrapping_pow(i) < n {
@@ -57,11 +74,21 @@ pub(crate) fn gcd(lhs: u64, rhs: u64) -> u64 {
         i -= 1;
     }
     1
+=======
+pub fn up3(n: u64) -> u64 {
+    todo!()
+}
+
+/// Returns the greatest common divisor (GCD) of two non-negative integers. (We assume the absence of integer overflow.)
+pub fn gcd(lhs: u64, rhs: u64) -> u64 {
+    todo!()
+>>>>>>> upstream/main
 }
 
 /// Returns the array of nC0, nC1, nC2, ..., nCn, where nCk = n! / (k! * (n-k)!). (We assume the absence of integer overflow.)
 ///
 /// Consult <https://en.wikipedia.org/wiki/Pascal%27s_triangle> for computation of binomial coefficients without integer overflow.
+<<<<<<< HEAD
 pub(crate) fn chooses(n: u64) -> Vec<u64> {
     let mut v = vec![];
     v.push(1);
@@ -186,11 +213,16 @@ pub(crate) fn faculty(n: u64) -> u64 {
         k += 1;
     }
     output
+=======
+pub fn chooses(n: u64) -> Vec<u64> {
+    todo!()
+>>>>>>> upstream/main
 }
 
 /// Returns the "zip" of two vectors.
 ///
 /// For instance, `zip(vec![1, 2, 3], vec![4, 5])` equals to `vec![(1, 4), (2, 5)]`.
+<<<<<<< HEAD
 /// Here, `3` is ignored becaus ze it doesn't have a partner.
 pub(crate) fn zip(lhs: Vec<u64>, rhs: Vec<u64>) -> Vec<(u64, u64)> {
     let mut i = 0;
@@ -204,6 +236,11 @@ pub(crate) fn zip(lhs: Vec<u64>, rhs: Vec<u64>) -> Vec<(u64, u64)> {
     }
     outcome_zip
     //todo!()
+=======
+/// Here, `3` is ignored because it doesn't have a partner.
+pub fn zip(lhs: Vec<u64>, rhs: Vec<u64>) -> Vec<(u64, u64)> {
+    todo!()
+>>>>>>> upstream/main
 }
 
 /// 2x2 matrix of the following configuration:
@@ -371,16 +408,21 @@ const FIBONACCI_VEC: Vec2 = Vec2 { a: 1, b: 0 };
 /// Calculates the Fibonacci number. (We assume the absence of integer overflow.)
 ///
 /// Consult <https://web.media.mit.edu/~holbrow/post/calculating-fibonacci-numbers-with-matrices-and-linear-algebra/> for matrix computation of Fibonacci numbers.
-pub(crate) fn fibonacci(n: u64) -> u64 {
+pub fn fibonacci(n: u64) -> u64 {
     (FIBONACCI_MAT.power(n) * FIBONACCI_VEC).get_upper()
 }
 
 /// Writes down the lyrics of "twelve days of christmas".
 ///
 /// Hint: Google the song title for lyrics and look at the test code for the expected result.
+<<<<<<< HEAD
 pub(crate) fn twelve_days_of_christmas_lyrics() -> String {
     LYRICS.to_string()
     //todo!()
+=======
+pub fn twelve_days_of_christmas_lyrics() -> String {
+    todo!()
+>>>>>>> upstream/main
 }
 const LYRICS: &str = r#"On the first day of Christmas, my true love sent to me
 A partridge in a pear tree
