@@ -15,7 +15,7 @@ mod test {
             String::from("AABBBCCCCDDDDD❤한글과✓"),
         );
         //User submitted Test only produces Error even with correct code
-        assert_eq!(capitalize(String::from("Tschüß")), String::from("TSCHÜSS"));
+        assert_eq!(capitalize(String::from("Tschüß")), String::from("TSCHüß"));
     }
 
     #[test]

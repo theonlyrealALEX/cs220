@@ -20,7 +20,7 @@ pub(crate) fn fahrenheit_to_celsius(degree: f64) -> f64 {
 
 /// Capitalizes English alphabets (leaving the other characters intact).
 pub(crate) fn capitalize(input: String) -> String {
-    input.to_uppercase()
+    input.to_ascii_uppercase()
     //todo!()
 }
 
@@ -36,7 +36,7 @@ pub(crate) fn sum_array(input: &[u64]) -> u64 {
 pub(crate) fn up3(n: u64) -> u64 {
     let mut i = 0;
     while 3_u64.wrapping_pow(i) < n {
-        i = i + 1;
+        i += 1;
     }
     3_u64.pow(i)
     //todo!()
@@ -54,7 +54,7 @@ pub(crate) fn gcd(lhs: u64, rhs: u64) -> u64 {
         if cmp::min(lhs, rhs) % i == 0 && cmp::max(lhs, rhs) % i == 0 {
             return i;
         }
-        i = i - 1;
+        i -= 1;
     }
     1
 }
@@ -81,13 +81,13 @@ pub(crate) fn chooses(n: u64) -> Vec<u64> {
         v_n_1 = vec![1];
         i = 1;
         while i < k {
-            v_n_1.push(&v_n_0[i - 1] + &v_n_0[i]);
-            //println!("v_n_1 push: {}", &v_n_0[i - 1] + &v_n_0[i]);
-            i = i + 1;
+            v_n_1.push(v_n_0[i - 1] + v_n_0[i]); //removed & &
+                                                 //println!("v_n_1 push: {}", &v_n_0[i - 1] + &v_n_0[i]);
+            i += 1;
             //println!(":i {}", i)
         }
         v_n_1.push(1);
-        k = k + 1;
+        k += 1;
         //println!("k: {}", k);
         //println!("n: {}", n);
     }
@@ -170,8 +170,8 @@ pub(crate) fn chooses_calculation_recursive(n: u64, k: u64) -> u64 {
     if k == 0 || n == k {
         return 1;
     }
-    return chooses_calculation_recursive(n.sub(1), k)
-        .add(chooses_calculation_recursive(n.sub(1), k.sub(1)));
+    chooses_calculation_recursive(n.sub(1), k)
+        .add(chooses_calculation_recursive(n.sub(1), k.sub(1)))
 }
 
 pub(crate) fn faculty(n: u64) -> u64 {
@@ -183,7 +183,7 @@ pub(crate) fn faculty(n: u64) -> u64 {
     while k <= n {
         //println!("faculty: {}{}{}", n, k, output);
         output = output.wrapping_mul(k);
-        k = k + 1;
+        k += 1;
     }
     output
 }
@@ -200,7 +200,7 @@ pub(crate) fn zip(lhs: Vec<u64>, rhs: Vec<u64>) -> Vec<(u64, u64)> {
     }
     while i < cmp::min(lhs.len(), rhs.len()) {
         outcome_zip.push((lhs[i], rhs[i]));
-        i = i + 1;
+        i += 1;
     }
     outcome_zip
     //todo!()
@@ -249,7 +249,7 @@ impl Mul<Mat2> for Mat2 {
         res.b = self.b * rhs.a + self.d * rhs.b;
         res.c = self.a * rhs.c + self.c * rhs.d;
         res.d = self.b * rhs.c + self.d * rhs.d;
-        return res;
+        res
         //todo!()
     }
 }
@@ -282,7 +282,7 @@ impl Mul<Vec2> for Mat2 {
         res.b = 0;
         res.a = self.a * rhs.a + self.c * rhs.b;
         res.b = self.b * rhs.a + self.d * rhs.b;
-        return res;
+        res
         //todo!()
     }
 }
@@ -316,7 +316,7 @@ impl Mat2 {
         res = self;
         while i < power {
             res = res.mul(self);
-            i = i + 1;
+            i += 1;
         }
         res
 
@@ -352,7 +352,7 @@ fn test_power() {
 impl Vec2 {
     /// Gets the upper value of vector.
     fn get_upper(self) -> u64 {
-        return self.a;
+        self.a
         //todo!()
     }
 }
