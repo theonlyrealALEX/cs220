@@ -6,7 +6,10 @@
 //! You should fill out the `todo!()` placeholders in such a way that `/scripts/grade-03.sh` works fine.
 //! See `assignment03_grade.rs` and `/scripts/grade-03.sh` for the test script.
 
-use std::collections::{HashMap, HashSet};
+use std::{
+    collections::{HashMap, HashSet},
+    ops::{Add, Div, Sub},
+};
 
 /// Day of week.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -31,7 +34,15 @@ pub enum DayOfWeek {
 ///
 /// `next_weekday(Thu)` is `Fri`; and `next_weekday(Fri)` is `Mon`.
 pub fn next_weekday(day: DayOfWeek) -> DayOfWeek {
-    todo!()
+    match day {
+        DayOfWeek::Mon => DayOfWeek::Tue,
+        DayOfWeek::Tue => DayOfWeek::Wed,
+        DayOfWeek::Wed => DayOfWeek::Thu,
+        DayOfWeek::Thu => DayOfWeek::Fri,
+        DayOfWeek::Fri => DayOfWeek::Mon,
+        DayOfWeek::Sat => DayOfWeek::Mon,
+        DayOfWeek::Sun => DayOfWeek::Mon,
+    }
 }
 
 /// Custom option type.
@@ -75,15 +86,61 @@ pub fn my_and_then<T, U, F: FnOnce(T) -> MyOption<U>>(v: MyOption<T>, f: F) -> M
 /// it has the median of 5, which is the fifth value.
 ///
 /// Returns `None` if the list is empty.
-pub fn median(values: Vec<isize>) -> Option<isize> {
-    todo!()
+pub fn median(mut values: Vec<isize>) -> Option<isize> {
+    if values.len() == 0 {
+        return None;
+    }
+    values.sort();
+    if is_even(&values) {
+        return Some(calc_even(&values));
+    }
+    Some(calc_odd(&values))
+}
+///Calculate Median for an Even Vector
+fn calc_even(lhs: &Vec<isize>) -> isize {
+    lhs[lhs.len().sub(1).div(2).add(1)]
+}
+///Calculate Median for an Odd Vector
+fn calc_odd(lhs: &Vec<isize>) -> isize {
+    lhs[lhs.len().sub(1).add(1).div(2)]
+}
+///Check if given Vector is Even
+fn is_even(lhs: &Vec<isize>) -> bool {
+    if lhs.len() % 2 == 0 {
+        return true;
+    }
+    false
 }
 
 /// Given a list of integers, returns its smallest mode (the value that occurs most often; a hash map will be helpful here).
 ///
 /// Returns `None` if the list is empty.
 pub fn mode(values: Vec<isize>) -> Option<isize> {
-    todo!()
+    if values.len() == 0 {
+        return None;
+    }
+    let mut res: HashMap<isize, u128> = HashMap::new();
+
+    for i in values {
+        if res.contains_key(&i) {
+            *res.get_mut(&i).unwrap() += 1;
+        } else {
+            res.insert(i, 1);
+        }
+    }
+
+    return get_hash_map_highest_value(res);
+}
+fn get_hash_map_highest_value(lhs: HashMap<isize, u128>) -> Option<isize> {
+    let mut integ: Option<isize> = None;
+    let mut count: u128 = 0;
+    for (k, v) in lhs {
+        if v > count {
+            integ = Some(k);
+            count = v;
+        }
+    }
+    return integ;
 }
 
 /// Converts the given string to Pig Latin. Use the rules below to translate normal English into Pig Latin.

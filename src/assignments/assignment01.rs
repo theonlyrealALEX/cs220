@@ -9,20 +9,10 @@
 //! Hint: <https://doc.rust-lang.org/std/primitive.usize.html>
 
 /// Adds two unsigned words. If overflow happens, just wrap around.
-<<<<<<< HEAD
 pub(crate) fn add(lhs: usize, rhs: usize) -> usize {
     lhs.wrapping_add(rhs)
-=======
-pub fn add(lhs: usize, rhs: usize) -> usize {
-    todo!()
->>>>>>> upstream/main
 }
 /// Subtracts two unsigned words. If overflow happens, just wrap around.
-<<<<<<< HEAD
 pub(crate) fn sub(lhs: usize, rhs: usize) -> usize {
     lhs.wrapping_sub(rhs)
-=======
-pub fn sub(lhs: usize, rhs: usize) -> usize {
-    todo!()
->>>>>>> upstream/main
 }

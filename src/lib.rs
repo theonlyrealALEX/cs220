@@ -28,11 +28,6 @@
 #![deny(unreachable_pub)]
 #![deny(single_use_lifetimes)]
 #![deny(unused_lifetimes)]
-<<<<<<< HEAD
-//#![deny(unused_imports)]
-mod assignments;
-=======
 #![deny(unstable_features)]
 
 pub mod assignments;
->>>>>>> upstream/main
