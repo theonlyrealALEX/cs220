@@ -119,18 +119,16 @@ pub fn mode(values: Vec<isize>) -> Option<isize> {
     if values.len() == 0 {
         return None;
     }
-    let mut res: HashMap<isize, u128> = HashMap::new();
+    let mut map = HashMap::new();
 
     for i in values {
-        if res.contains_key(&i) {
-            *res.get_mut(&i).unwrap() += 1;
-        } else {
-            res.insert(i, 1);
-        }
+        let count = map.entry(i).or_insert(0);
+        *count += 1;
     }
-
-    return get_hash_map_highest_value(res);
+    //println!("{:?}", map);
+    return get_hash_map_highest_value(map);
 }
+///Returns Hashmap-Key with highest associated u128 value
 fn get_hash_map_highest_value(lhs: HashMap<isize, u128>) -> Option<isize> {
     let mut integ: Option<isize> = None;
     let mut count: u128 = 0;
@@ -161,7 +159,44 @@ fn get_hash_map_highest_value(lhs: HashMap<isize, u128>) -> Option<isize> {
 ///
 /// You may assume the string only contains lowercase alphabets, and it contains at least one vowel.
 pub fn piglatin(input: String) -> String {
+    let string_type: PigLatinType;
+    if char_is_vowel(input.chars().nth(0).unwrap()) {
+        string_type = PigLatinType::Vowel;
+    } else if !char_is_vowel(input.chars().nth(0).unwrap())
+        && !char_is_vowel(input.chars().nth(1).unwrap())
+    {
+        string_type = PigLatinType::ConsonantConsonant;
+    } else {
+        string_type = PigLatinType::ConsonantVowel;
+    }
+
     todo!()
+}
+#[derive()]
+enum PigLatinType {
+    ConsonantVowel,
+    ConsonantConsonant,
+    Vowel,
+}
+
+///checks if first char in a string is a lowercase vowel char (a,e,i,o,u)
+fn char_is_vowel(input: char) -> bool {
+    if input == 'a' {
+        return true;
+    }
+    if input == 'e' {
+        return true;
+    }
+    if input == 'i' {
+        return true;
+    }
+    if input == 'o' {
+        return true;
+    }
+    if input == 'u' {
+        return true;
+    }
+    false
 }
 
 /// Converts HR commands to the organization table.
