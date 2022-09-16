@@ -8,6 +8,7 @@
 
 use std::{
     collections::{HashMap, HashSet},
+    fs::read,
     ops::{Add, Div, Sub},
 };
 
@@ -158,7 +159,7 @@ fn get_hash_map_highest_value(lhs: HashMap<isize, u128>) -> Option<isize> {
 /// Keep in mind the details about UTF-8 encoding!
 ///
 /// You may assume the string only contains lowercase alphabets, and it contains at least one vowel.
-pub fn piglatin(input: String) -> String {
+pub fn piglatin(mut input: String) -> String {
     let string_type: PigLatinType;
     if char_is_vowel(input.chars().nth(0).unwrap()) {
         string_type = PigLatinType::Vowel;
@@ -170,13 +171,53 @@ pub fn piglatin(input: String) -> String {
         string_type = PigLatinType::ConsonantVowel;
     }
 
-    todo!()
+    match string_type {
+        PigLatinType::ConsonantVowel => add_ay_to_end(move_first_to_end(input)),
+        PigLatinType::ConsonantConsonant => {
+            let mut j = 0;
+            for i in input.chars() {
+                if char_is_vowel(i) {
+                    break;
+                }
+                j += 1;
+            }
+            let mut k = 0;
+            while k < j {
+                input = move_first_to_end(input);
+                k += 1
+            }
+            return add_ay_to_end(input);
+        }
+        PigLatinType::Vowel => return add_hay_to_end(input),
+    }
 }
-#[derive()]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 enum PigLatinType {
     ConsonantVowel,
     ConsonantConsonant,
     Vowel,
+}
+
+#[test]
+fn test_move_first_to_end() {
+    println!("{}", move_first_to_end("abcdefg".to_string()));
+}
+
+///Move First letter to the end of a String
+fn move_first_to_end(input: String) -> String {
+    let mut res = input;
+    res.push(res.chars().nth(0).unwrap());
+    res[1..res.len()].to_string()
+}
+
+///Add "hay" to end of String
+fn add_hay_to_end(input: String) -> String {
+    input + "hay"
+}
+
+///Add "ay" to end of String
+fn add_ay_to_end(input: String) -> String {
+    input + "ay"
 }
 
 ///checks if first char in a string is a lowercase vowel char (a,e,i,o,u)
@@ -221,5 +262,258 @@ fn char_is_vowel(input: char) -> bool {
 ///
 /// See the test function for more details.
 pub fn organize(commands: Vec<String>) -> HashMap<String, HashSet<String>> {
-    todo!()
+    let mut res: HashMap<String, HashSet<String>> = HashMap::new();
+
+    for i in commands {
+        let command = i.split_whitespace().next().unwrap_or("");
+        let vec_input: Vec<&str> = i.split_whitespace().collect();
+
+        if command == "Add" {
+            println!("Add:");
+            let person: String = vec_input[1].to_string();
+            let department = vec_input[3].to_string();
+
+            let tmp = add_person_to_department(person, department, &mut res);
+            /*for (key, value) in &res {
+                println!("KEY_ADD:{}", key);
+            }*/
+        } else if command == "Remove" {
+            println!("Remove:");
+
+            let person: String = vec_input[1].to_string();
+            let department = vec_input[3].to_string();
+
+            res = remove_person_from_department(person, department, res);
+        } else if command == "Move" {
+            let person: String = vec_input[1].to_string();
+            let add_to_department = vec_input[5].to_string();
+            let remove_from_department = vec_input[3].to_string();
+
+            if is_in_department(person, remove_from_department, &res) == true {
+                //add move logic
+            }
+        }
+    }
+    res
 }
+
+fn is_in_department(
+    person: String,
+    department: String,
+    res: &HashMap<String, HashSet<String>>,
+) -> bool {
+    match res.get(&department) {
+        Some(dpt) => {
+            if dpt.contains(&person) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        None => return false,
+    }
+}
+
+///remove person from department no matter if it exists or not && delete empty key's
+fn remove_person_from_department(
+    person: String,
+    department: String,
+    mut res: HashMap<String, HashSet<String>>,
+) -> HashMap<String, HashSet<String>> {
+    if res.contains_key(&department) {
+        match res.get(&department) {
+            Some(dpt) => {
+                let mut tmp_person_hashset = dpt.clone();
+                let tmp = tmp_person_hashset.remove(&person);
+                let tmp = res.remove(&department);
+                if tmp_person_hashset.is_empty() {
+                    return res;
+                }
+                let dpt = department;
+                let tmp = res.insert(dpt, tmp_person_hashset);
+            }
+            None => (),
+        }
+    }
+    res
+}
+
+///add a person into the hashset for a department key; or_insert -> only inserts if its not already present;
+fn add_person_to_department(
+    person: String,
+    department: String,
+    res: &mut HashMap<String, HashSet<String>>,
+) -> &mut HashMap<String, HashSet<String>> {
+    println!("called add_person_to_department");
+    /*
+        let mut person_hs = HashSet::<String>::new();
+        let tmp = person_hs.insert(person);
+        let tmp = res.get_mut(&department).get_or_insert(&mut person_hs);
+    */
+    match res.get(&department) {
+        Some(dpt) => {
+            let mut tmp_person_hashset = dpt.clone();
+            let tmp = tmp_person_hashset.insert(person);
+            let tmp = res.entry(department).or_insert(tmp_person_hashset);
+        }
+        None => {
+            let mut tmp_person_hashset = HashSet::new();
+            let tmp = tmp_person_hashset.insert(person);
+            let tmp = res.entry(department).or_insert(tmp_person_hashset);
+        }
+    }
+
+    return res;
+}
+
+///old organize
+pub fn organize_old(commands: Vec<String>) -> HashMap<String, HashSet<String>> {
+    let mut res: HashMap<String, HashSet<String>> = HashMap::new();
+    for i in commands {
+        let command = i.split_whitespace().next().unwrap_or("");
+        let vec_input: Vec<&str> = i.split_whitespace().collect();
+        if command == "Add" {
+            let person: String = vec_input[1].to_string();
+            let to_department = vec_input[3].to_string();
+            if res.contains_key(&to_department) {
+                println!("Contains_key initiated");
+                match res.get(&to_department) {
+                    Some(dpt) => {
+                        let mut tmp_person_hashset = dpt.clone();
+                        let tmp = tmp_person_hashset.insert(person);
+                        let tmp = res.entry(to_department).or_insert(tmp_person_hashset);
+                    }
+                    None => {
+                        let mut tmp_person_hashset = HashSet::new();
+                        let tmp = tmp_person_hashset.insert(person);
+                        let tmp = res.entry(to_department).or_insert(tmp_person_hashset);
+                    }
+                }
+            } else {
+                let mut tmp_person_hashset = HashSet::new();
+                let tmp = tmp_person_hashset.insert(person);
+                let tmp = res.insert(to_department, tmp_person_hashset);
+            }
+        } else if command == "Remove" {
+            let person: String = vec_input[1].to_string();
+            let to_department = vec_input[3].to_string();
+            if res.contains_key(&to_department) {
+                match res.get(&to_department) {
+                    Some(dpt) => {
+                        let mut tmp_person_hashset = dpt.clone();
+                        let tmp = tmp_person_hashset.remove(&person);
+                        let tmp = res.remove(&to_department);
+                        if tmp_person_hashset.is_empty() {
+                            break;
+                        }
+                        let dpt = to_department;
+                        let tmp = res.insert(dpt, tmp_person_hashset);
+                    }
+                    None => (),
+                }
+            }
+        } else if command == "Move" {
+            println!("move");
+            //Add:
+            let person: String = vec_input[1].to_string();
+            let to_department = vec_input[5].to_string();
+
+            if res.contains_key(&to_department) {
+                match res.get(&to_department) {
+                    Some(dpt) => {
+                        let mut tmp_person_hashset = dpt.clone();
+                        let tmp = tmp_person_hashset.insert(person);
+                        let tmp = res.entry(to_department).or_insert(tmp_person_hashset);
+                        for (key, value) in &res {
+                            println!("KEY_MOVE:{}", key);
+                        }
+                    }
+                    None => {
+                        let mut tmp_person_hashset = HashSet::new();
+                        let tmp = tmp_person_hashset.insert(person);
+                        let tmp = res.entry(to_department).or_insert(tmp_person_hashset);
+                    }
+                }
+            } else {
+                let mut tmp_person_hashset = HashSet::new();
+                let tmp = tmp_person_hashset.insert(person);
+                let tmp = res.insert(to_department, tmp_person_hashset);
+            }
+
+            //Remove:
+
+            let person: String = vec_input[1].to_string();
+            let to_department = vec_input[3].to_string();
+            if res.contains_key(&to_department) {
+                match res.get(&to_department) {
+                    Some(dpt) => {
+                        let mut tmp_person_hashset = dpt.clone();
+                        let tmp = tmp_person_hashset.remove(&person);
+                        let tmp = res.remove(&to_department);
+                        if tmp_person_hashset.is_empty() {
+                            break;
+                        }
+                        let dpt = to_department;
+                        let tmp = res.insert(dpt, tmp_person_hashset);
+                    }
+                    None => (),
+                }
+            }
+
+            for (key, value) in &res {
+                println!("KEY_MOVE:{}", key);
+            }
+        }
+    }
+
+    //todo: implement deletion of empty values
+    res
+}
+
+#[test]
+fn test_read_command() {
+    //let test = read_command("Add Mustafa to Yourmum".to_string());
+}
+/*
+fn read_command(input: String) -> Command {
+    let command = input.split_whitespace().next().unwrap_or("");
+    let vec_input: Vec<&str> = input.split_whitespace().collect();
+    if command == "Add" {
+        return Command {
+            person: vec_input[1].to_string(),
+            from_department: None,
+            to_department: Some(vec_input[3].to_string()),
+            command: Some(vec_input[0].to_string()),
+        };
+    } else if command == "Remove" {
+        return Command {
+            person: Some(vec_input[1].to_string()),
+            from_department: Some(vec_input[3].to_string()),
+            to_department: None,
+            command: Some(vec_input[0].to_string()),
+        };
+    } else if command == "Move" {
+        return Command {
+            person: Some(vec_input[1].to_string()),
+            from_department: Some(vec_input[3].to_string()),
+            to_department: Some(vec_input[5].to_string()),
+            command: Some(vec_input[0].to_string()),
+        };
+    }
+    return Command {
+        person: None,
+        from_department: None,
+        to_department: None,
+        command: None,
+    };
+}
+
+#[derive()]
+struct Command {
+    person: String,
+    from_department: String,
+    to_department: String,
+    command: String,
+}
+
+*/
