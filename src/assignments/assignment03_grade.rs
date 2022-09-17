@@ -77,7 +77,9 @@ mod test {
         assert_eq!(mode(vec![]), None);
         assert_eq!(mode(vec![3]), Some(3));
         assert_eq!(mode(vec![2, 1, 2, 3]), Some(2));
+        //println!("passed test mode_3");
         assert_eq!(mode(vec![2, 3, 1, 2, 2, 3, 3]), Some(2));
+        //println!("passed test mode_4");
         assert_eq!(mode(vec![1, 1, 2, 2, 3, 3]), Some(1));
     }
 

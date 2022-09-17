@@ -8,7 +8,7 @@
 
 use std::{
     collections::{HashMap, HashSet},
-    fs::read,
+    //fs::read,
     ops::{Add, Div, Sub},
 };
 
@@ -57,12 +57,18 @@ pub enum MyOption<T> {
 
 /// Maps the inner value if the given value is `MySome`; returns `MyNone` otherwise.
 pub fn my_map<T, U, F: FnOnce(T) -> U>(v: MyOption<T>, f: F) -> MyOption<U> {
-    todo!()
+    match v {
+        MyOption::MySome(v_some) => return MyOption::MySome(f(v_some)),
+        MyOption::MyNone => return MyOption::MyNone,
+    }
 }
 
 /// Maps the inner value if the given value is `MySome`, but with a different type of function; returns `MyNone` otherwise.
 pub fn my_and_then<T, U, F: FnOnce(T) -> MyOption<U>>(v: MyOption<T>, f: F) -> MyOption<U> {
-    todo!()
+    match v {
+        MyOption::MySome(v_some) => return f(v_some),
+        MyOption::MyNone => return MyOption::MyNone,
+    }
 }
 
 /// Given a list of integers, returns its median (when sorted, the value in the middle position).
@@ -133,10 +139,13 @@ pub fn mode(values: Vec<isize>) -> Option<isize> {
 fn get_hash_map_highest_value(lhs: HashMap<isize, u128>) -> Option<isize> {
     let mut integ: Option<isize> = None;
     let mut count: u128 = 0;
+
     for (k, v) in lhs {
         if v > count {
             integ = Some(k);
             count = v;
+        } else if v == count && Some(k) < integ {
+            integ = Some(k)
         }
     }
     return integ;
@@ -326,7 +335,7 @@ fn is_in_department(
 fn remove_person_from_department(
     person: String,
     department: String,
-    mut res: &mut HashMap<String, HashSet<String>>,
+    res: &mut HashMap<String, HashSet<String>>,
 ) -> &mut HashMap<String, HashSet<String>> {
     println!(
         "called remove_person_from_department with person: {}, department: {}",
