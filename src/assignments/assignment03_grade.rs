@@ -117,6 +117,7 @@ mod test {
             organize(vec![
                 "Add Amir to Engineering".to_string(),
                 "Add Sally to Sales".to_string(),
+                "Add Amir to Sales".to_string(),
                 "Remove Jeehoon from Sales".to_string(),
                 "Move Amir from Engineering to Sales".to_string(),
             ]),

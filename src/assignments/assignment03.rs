@@ -283,14 +283,22 @@ pub fn organize(commands: Vec<String>) -> HashMap<String, HashSet<String>> {
             let person: String = vec_input[1].to_string();
             let department = vec_input[3].to_string();
 
-            res = remove_person_from_department(person, department, res);
+            let tmp = remove_person_from_department(person, department, &mut res);
         } else if command == "Move" {
             let person: String = vec_input[1].to_string();
+            let person_remove = person.clone();
             let add_to_department = vec_input[5].to_string();
             let remove_from_department = vec_input[3].to_string();
+            println!(
+                "person: {}, add_dept: {}, remove_dept: {}",
+                &person, &add_to_department, &remove_from_department
+            );
 
-            if is_in_department(person, remove_from_department, &res) == true {
+            if is_in_department(&person, &remove_from_department, &res) == true {
                 //add move logic
+                let tmp = add_person_to_department(person, add_to_department, &mut res);
+                let tmp =
+                    remove_person_from_department(person_remove, remove_from_department, &mut res);
             }
         }
     }
@@ -298,13 +306,13 @@ pub fn organize(commands: Vec<String>) -> HashMap<String, HashSet<String>> {
 }
 
 fn is_in_department(
-    person: String,
-    department: String,
+    person: &String,
+    department: &String,
     res: &HashMap<String, HashSet<String>>,
 ) -> bool {
-    match res.get(&department) {
+    match res.get(department) {
         Some(dpt) => {
-            if dpt.contains(&person) {
+            if dpt.contains(person) {
                 return true;
             } else {
                 return false;
@@ -318,8 +326,12 @@ fn is_in_department(
 fn remove_person_from_department(
     person: String,
     department: String,
-    mut res: HashMap<String, HashSet<String>>,
-) -> HashMap<String, HashSet<String>> {
+    mut res: &mut HashMap<String, HashSet<String>>,
+) -> &mut HashMap<String, HashSet<String>> {
+    println!(
+        "called remove_person_from_department with person: {}, department: {}",
+        &person, &department
+    );
     if res.contains_key(&department) {
         match res.get(&department) {
             Some(dpt) => {
@@ -335,28 +347,44 @@ fn remove_person_from_department(
             None => (),
         }
     }
-    res
+    return res;
 }
 
-///add a person into the hashset for a department key; or_insert -> only inserts if its not already present;
+///add a person into the hashset for a department key; or_insert -> only inserts if person its not already present;
 fn add_person_to_department(
     person: String,
     department: String,
     res: &mut HashMap<String, HashSet<String>>,
 ) -> &mut HashMap<String, HashSet<String>> {
-    println!("called add_person_to_department");
+    println!(
+        "called add_person_to_department with person: {}, department: {}",
+        &person, &department
+    );
     /*
         let mut person_hs = HashSet::<String>::new();
         let tmp = person_hs.insert(person);
         let tmp = res.get_mut(&department).get_or_insert(&mut person_hs);
     */
+    let person_tmp = person.clone();
     match res.get(&department) {
         Some(dpt) => {
+            println!("res.get(dept) is SOME");
             let mut tmp_person_hashset = dpt.clone();
             let tmp = tmp_person_hashset.insert(person);
-            let tmp = res.entry(department).or_insert(tmp_person_hashset);
+            println!("was something inserted into the hashSET: {tmp}");
+
+            let dpt = department;
+            let tmp = res.insert(dpt, tmp_person_hashset);
+
+            //let tmp = res.entry(department).or_insert(tmp_person_hashset);
+
+            /*println!(
+                "was something inserted into the HashMAP: {:?}",
+                tmp.get(&person_tmp)
+            );*/
         }
         None => {
+            println!("res.get(dept) is NONE");
             let mut tmp_person_hashset = HashSet::new();
             let tmp = tmp_person_hashset.insert(person);
             let tmp = res.entry(department).or_insert(tmp_person_hashset);
