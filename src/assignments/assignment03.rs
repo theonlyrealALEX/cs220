@@ -58,16 +58,16 @@ pub enum MyOption<T> {
 /// Maps the inner value if the given value is `MySome`; returns `MyNone` otherwise.
 pub fn my_map<T, U, F: FnOnce(T) -> U>(v: MyOption<T>, f: F) -> MyOption<U> {
     match v {
-        MyOption::MySome(v_some) => return MyOption::MySome(f(v_some)),
-        MyOption::MyNone => return MyOption::MyNone,
+        MyOption::MySome(v_some) => MyOption::MySome(f(v_some)),
+        MyOption::MyNone => MyOption::MyNone,
     }
 }
 
 /// Maps the inner value if the given value is `MySome`, but with a different type of function; returns `MyNone` otherwise.
 pub fn my_and_then<T, U, F: FnOnce(T) -> MyOption<U>>(v: MyOption<T>, f: F) -> MyOption<U> {
     match v {
-        MyOption::MySome(v_some) => return f(v_some),
-        MyOption::MyNone => return MyOption::MyNone,
+        MyOption::MySome(v_some) => f(v_some),
+        MyOption::MyNone => MyOption::MyNone,
     }
 }
 
@@ -94,7 +94,7 @@ pub fn my_and_then<T, U, F: FnOnce(T) -> MyOption<U>>(v: MyOption<T>, f: F) -> M
 ///
 /// Returns `None` if the list is empty.
 pub fn median(mut values: Vec<isize>) -> Option<isize> {
-    if values.len() == 0 {
+    if is_empty(values.len()) {
         return None;
     }
     values.sort();
@@ -103,6 +103,14 @@ pub fn median(mut values: Vec<isize>) -> Option<isize> {
     }
     Some(calc_odd(&values))
 }
+
+fn is_empty(u: usize) -> bool {
+    if u == 0 {
+        return true;
+    }
+    false
+}
+
 ///Calculate Median for an Even Vector
 fn calc_even(lhs: &Vec<isize>) -> isize {
     lhs[lhs.len().sub(1).div(2).add(1)]
@@ -123,7 +131,7 @@ fn is_even(lhs: &Vec<isize>) -> bool {
 ///
 /// Returns `None` if the list is empty.
 pub fn mode(values: Vec<isize>) -> Option<isize> {
-    if values.len() == 0 {
+    if is_empty(values.len()) {
         return None;
     }
     let mut map = HashMap::new();
@@ -133,7 +141,7 @@ pub fn mode(values: Vec<isize>) -> Option<isize> {
         *count += 1;
     }
     //println!("{:?}", map);
-    return get_hash_map_highest_value(map);
+    get_hash_map_highest_value(map)
 }
 ///Returns Hashmap-Key with highest associated u128 value
 fn get_hash_map_highest_value(lhs: HashMap<isize, u128>) -> Option<isize> {
@@ -148,7 +156,7 @@ fn get_hash_map_highest_value(lhs: HashMap<isize, u128>) -> Option<isize> {
             integ = Some(k)
         }
     }
-    return integ;
+    integ
 }
 
 /// Converts the given string to Pig Latin. Use the rules below to translate normal English into Pig Latin.
@@ -170,9 +178,9 @@ fn get_hash_map_highest_value(lhs: HashMap<isize, u128>) -> Option<isize> {
 /// You may assume the string only contains lowercase alphabets, and it contains at least one vowel.
 pub fn piglatin(mut input: String) -> String {
     let string_type: PigLatinType;
-    if char_is_vowel(input.chars().nth(0).unwrap()) {
+    if char_is_vowel(input.chars().next().unwrap()) {
         string_type = PigLatinType::Vowel;
-    } else if !char_is_vowel(input.chars().nth(0).unwrap())
+    } else if !char_is_vowel(input.chars().next().unwrap())
         && !char_is_vowel(input.chars().nth(1).unwrap())
     {
         string_type = PigLatinType::ConsonantConsonant;
@@ -195,9 +203,9 @@ pub fn piglatin(mut input: String) -> String {
                 input = move_first_to_end(input);
                 k += 1
             }
-            return add_ay_to_end(input);
+            add_ay_to_end(input)
         }
-        PigLatinType::Vowel => return add_hay_to_end(input),
+        PigLatinType::Vowel => add_hay_to_end(input),
     }
 }
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -215,7 +223,7 @@ fn test_move_first_to_end() {
 ///Move First letter to the end of a String
 fn move_first_to_end(input: String) -> String {
     let mut res = input;
-    res.push(res.chars().nth(0).unwrap());
+    res.push(res.chars().next().unwrap());
     res[1..res.len()].to_string()
 }
 
@@ -303,7 +311,7 @@ pub fn organize(commands: Vec<String>) -> HashMap<String, HashSet<String>> {
                 &person, &add_to_department, &remove_from_department
             );
 
-            if is_in_department(&person, &remove_from_department, &res) == true {
+            if is_in_department(&person, &remove_from_department, &res) {
                 //add move logic
                 let tmp = add_person_to_department(person, add_to_department, &mut res);
                 let tmp =
@@ -320,14 +328,8 @@ fn is_in_department(
     res: &HashMap<String, HashSet<String>>,
 ) -> bool {
     match res.get(department) {
-        Some(dpt) => {
-            if dpt.contains(person) {
-                return true;
-            } else {
-                return false;
-            }
-        }
-        None => return false,
+        Some(dpt) => dpt.contains(person),
+        None => false,
     }
 }
 
@@ -356,7 +358,7 @@ fn remove_person_from_department(
             None => (),
         }
     }
-    return res;
+    res
 }
 
 ///add a person into the hashset for a department key; or_insert -> only inserts if person its not already present;
@@ -400,7 +402,7 @@ fn add_person_to_department(
         }
     }
 
-    return res;
+    res
 }
 
 ///old organize
@@ -411,7 +413,9 @@ pub fn organize_old(commands: Vec<String>) -> HashMap<String, HashSet<String>> {
         let vec_input: Vec<&str> = i.split_whitespace().collect();
         if command == "Add" {
             let person: String = vec_input[1].to_string();
+            let person_tmp = person.clone();
             let to_department = vec_input[3].to_string();
+            let to_department_tmp = to_department.clone();
             if res.contains_key(&to_department) {
                 println!("Contains_key initiated");
                 match res.get(&to_department) {
@@ -426,11 +430,12 @@ pub fn organize_old(commands: Vec<String>) -> HashMap<String, HashSet<String>> {
                         let tmp = res.entry(to_department).or_insert(tmp_person_hashset);
                     }
                 }
-            } else {
-                let mut tmp_person_hashset = HashSet::new();
-                let tmp = tmp_person_hashset.insert(person);
-                let tmp = res.insert(to_department, tmp_person_hashset);
-            }
+            } //else if !res.contains_key(&to_department) {
+            let mut tmp_person_hashset = HashSet::new();
+            let tmp = tmp_person_hashset.insert(person_tmp);
+            let tmp_person_hashset_2 = tmp_person_hashset.clone();
+            let tmp = res.insert(to_department_tmp, tmp_person_hashset_2);
+            //}
         } else if command == "Remove" {
             let person: String = vec_input[1].to_string();
             let to_department = vec_input[3].to_string();
@@ -453,29 +458,30 @@ pub fn organize_old(commands: Vec<String>) -> HashMap<String, HashSet<String>> {
             println!("move");
             //Add:
             let person: String = vec_input[1].to_string();
+            let person_tmp = person.clone();
             let to_department = vec_input[5].to_string();
-
-            if res.contains_key(&to_department) {
-                match res.get(&to_department) {
-                    Some(dpt) => {
-                        let mut tmp_person_hashset = dpt.clone();
-                        let tmp = tmp_person_hashset.insert(person);
-                        let tmp = res.entry(to_department).or_insert(tmp_person_hashset);
-                        for (key, value) in &res {
-                            println!("KEY_MOVE:{}", key);
-                        }
-                    }
-                    None => {
-                        let mut tmp_person_hashset = HashSet::new();
-                        let tmp = tmp_person_hashset.insert(person);
-                        let tmp = res.entry(to_department).or_insert(tmp_person_hashset);
+            let to_department_tmp = to_department.clone();
+            //if res.contains_key(&to_department) {
+            match res.get(&to_department) {
+                Some(dpt) => {
+                    let mut tmp_person_hashset = dpt.clone();
+                    let tmp = tmp_person_hashset.insert(person);
+                    let tmp = res.entry(to_department).or_insert(tmp_person_hashset);
+                    for (key, value) in &res {
+                        println!("KEY_MOVE:{}", key);
                     }
                 }
-            } else {
-                let mut tmp_person_hashset = HashSet::new();
-                let tmp = tmp_person_hashset.insert(person);
-                let tmp = res.insert(to_department, tmp_person_hashset);
+                None => {
+                    let mut tmp_person_hashset = HashSet::new();
+                    let tmp = tmp_person_hashset.insert(person);
+                    let tmp = res.entry(to_department).or_insert(tmp_person_hashset);
+                }
             }
+            //} else {
+            let mut tmp_person_hashset = HashSet::new();
+            let tmp = tmp_person_hashset.insert(person_tmp);
+            let tmp = res.insert(to_department_tmp, tmp_person_hashset);
+            //}
 
             //Remove:
 
